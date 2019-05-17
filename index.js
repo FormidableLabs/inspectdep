@@ -10,10 +10,24 @@ const readJson = async (filePath) => JSON.parse(await readFile(filePath));
 // Return location and data from package json on disk.
 //
 // Iterates from curPath up to rootPath.
-const findPkg = async ({ rootPath, curPath }) => {
-  while (curPath.length >= rootPath) {
+const findPkg = async ({ rootPath, curPath, name }) => {
+  let loc;
+  let pkg;
 
+  while (curPath.length >= rootPath.length) {
+    loc = path.join(curPath, "node_modules", name);
+    try {
+      pkg = readJson(path.join(loc, "package.json"));
+      return { dependencies: pkg.dependencies, loc };
+    } catch (err) {
+      console.log(err); // TODO HANDLE NOTFOUND VS OTHER
+    }
+
+    // Decrement path and try again.
+    curPath = path.basename(curPath);
   }
+
+  return { dependencies: null, loc: null };
 };
 
 /**
@@ -29,12 +43,17 @@ const production = async ({ rootPath, curPath }) => {
   curPath = curPath || rootPath;
 
   const pkgPath = path.resolve(curPath, "package.json");
-  const { dependencies } = await readJson(pkgPath);
-  const deps = Promise.all(Object.keys(dependencies || {}).map((name) =>
-    // TODO: FIND ON DISK ITERATING DOWN.
+  const pkg = await readJson(pkgPath);
+  const deps = Promise.all(Object.keys(pkg.dependencies || {}).map(async (name) => {
+    const { dependencies, loc } = await findPkg({
+      rootPath,
+      curPath,
+      name
+    });
+
     // TODO: RECURSE INTO EACH DEPENDENCY.
-    path.relative(rootPath, path.resolve(curPath, "node_modules", name))
-  ));
+    return path.relative(rootPath, loc);
+  }));
 
   return deps;
 };
