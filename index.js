@@ -36,12 +36,19 @@ const findPkg = async ({ rootPath, curPath, name }) => {
 
 // Recursively traverse package.json + path to resolve all on-disk locations
 const resolveLocations = async ({ rootPath, curPath, pkg }) => {
-  const locs = await Promise.all(Object.keys(pkg.dependencies || {}).map(async (name) => {
+  // Production dependencies include both production and optional if found.
+  const names = []
+    .concat(Object.keys(pkg.dependencies || {}))
+    .concat(Object.keys(pkg.optionalDependencies || {}));
+
+  const locs = await Promise.all(names.map(async (name) => {
+    const isOptional = !pkg.dependencies[name];
+
     // Find current package.
     const found = await findPkg({ rootPath, curPath, name });
     if (!found) {
       // TODO: Handle not found and/or filter nulls.
-      console.log("TODO HANDLE NOT FOUND", { rootPath, curPath, name });
+      console.log("TODO HANDLE NOT FOUND", { rootPath, curPath, name, isOptional });
       return null;
     }
 
