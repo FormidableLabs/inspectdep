@@ -18,7 +18,8 @@ _Notes_:
 
 * This includes all `dependencies` and `optionalDependencies`, simulating what would happen during a `yarn|npm install --production`.
 * Paths are relative to `rootPath` and separated with `path.sep` native OS separators
-* If dependencies are not found installed on-disk they are simply ignored
+* If dependencies are not found installed on-disk they are simply ignored.
+  [#2](https://github.com/FormidableLabs/inspectdep/issues/2)
 
 _Parameters_:
 
