@@ -17,17 +17,36 @@ const findPkg = async ({ rootPath, curPath, name }) => {
   while (curPath.length >= rootPath.length) {
     loc = path.join(curPath, "node_modules", name);
     try {
-      pkg = readJson(path.join(loc, "package.json"));
-      return { dependencies: pkg.dependencies, loc };
+      pkg = await readJson(path.join(loc, "package.json"));
+      return { pkg, loc };
     } catch (err) {
-      console.log(err); // TODO HANDLE NOTFOUND VS OTHER
+      console.log("TODO HANDLE ERROR", err); // TODO HANDLE NOTFOUND VS OTHER
     }
 
     // Decrement path and try again.
     curPath = path.basename(curPath);
   }
 
-  return { dependencies: null, loc: null };
+  return { pkg: null, loc: null };
+};
+
+// Recursively traverse package.json + path to resolve all on-disk locations
+const resolveLocations = async ({ rootPath, curPath, pkg }) => {
+  const locs = await Promise.all(Object.keys(pkg.dependencies || {}).map(async (name) => {
+    // Find current package.
+    const { pkg, loc } = await findPkg({
+      rootPath,
+      curPath,
+      name
+    });
+
+    // TODO: RECURSE INTO EACH DEPENDENCY.
+    console.log("TODO HERE", { loc });
+
+    return path.relative(rootPath, loc);
+  }));
+
+  return locs;
 };
 
 /**
@@ -42,20 +61,10 @@ const production = async ({ rootPath, curPath }) => {
   rootPath = rootPath || ".";
   curPath = curPath || rootPath;
 
-  const pkgPath = path.resolve(curPath, "package.json");
-  const pkg = await readJson(pkgPath);
-  const deps = Promise.all(Object.keys(pkg.dependencies || {}).map(async (name) => {
-    const { dependencies, loc } = await findPkg({
-      rootPath,
-      curPath,
-      name
-    });
+  const pkg = await readJson(path.resolve(curPath, "package.json"));
+  const locs = await resolveLocations({ pkg, rootPath, curPath });
 
-    // TODO: RECURSE INTO EACH DEPENDENCY.
-    return path.relative(rootPath, loc);
-  }));
-
-  return deps;
+  return locs;
 };
 
 module.exports = {
