@@ -22,7 +22,7 @@ const findPkg = async ({ rootPath, curPath, name }) => {
     } catch (err) {
       // Decrement path and try again if not found.
       if (err.code === "ENOENT") {
-        curPath = path.basename(curPath);
+        curPath = path.dirname(curPath);
         continue;
       }
 
@@ -40,6 +40,7 @@ const resolveLocations = async ({ rootPath, curPath, pkg }) => {
     // Find current package.
     const found = await findPkg({ rootPath, curPath, name });
     if (!found) {
+      // TODO: Handle not found and/or filter nulls.
       console.log("TODO HANDLE NOT FOUND", { rootPath, curPath, name });
       return null;
     }
@@ -47,16 +48,15 @@ const resolveLocations = async ({ rootPath, curPath, pkg }) => {
     // Recurse into dependencies.
     const deps = await resolveLocations({ rootPath, curPath: found.loc, pkg: found.pkg });
 
-    // TODO: RECURSE INTO EACH DEPENDENCY.
-    console.log("TODO HERE", { loc: found.loc, deps });
-
-    return path.relative(rootPath, found.loc);
+    return [path.relative(rootPath, found.loc)].concat(deps);
   }));
 
-  // TODO FILTER NULLS
-  // TODO FLATTEN ARRAYS (AND SORT?)
-
-  return locs;
+  return locs
+    // Flatten sub-arrays.
+    .reduce((m, a) => m.concat(a), [])
+    // By sorting, we can filter duplicates just looking one behind.
+    .sort()
+    .filter((item, i, items) => item !== items[i - 1]);
 };
 
 /**
@@ -64,15 +64,13 @@ const resolveLocations = async ({ rootPath, curPath, pkg }) => {
  *
  * @param {*}       opts          options object
  * @param {string}  opts.rootPath `node_modules` root location (default: `process.cwd()`)
- * @param {string}  opts.curPath  current search within root (default: `rootPath`)
  * @returns {Promise<Array<String>>} list of relative paths to on-disk dependencies.
  */
-const production = async ({ rootPath, curPath }) => {
-  rootPath = rootPath || ".";
-  curPath = curPath || rootPath;
+const production = async ({ rootPath }) => {
+  rootPath = path.resolve(rootPath || ".");
 
-  const pkg = await readJson(path.resolve(curPath, "package.json"));
-  const locs = await resolveLocations({ pkg, rootPath, curPath });
+  const pkg = await readJson(path.resolve(rootPath, "package.json"));
+  const locs = await resolveLocations({ pkg, rootPath, curPath: rootPath });
 
   return locs;
 };
