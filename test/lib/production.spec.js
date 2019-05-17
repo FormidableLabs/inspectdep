@@ -16,9 +16,17 @@ describe("lib/production", () => {
   });
 
   describe("findProdInstalls", () => {
-    it("handles empty root directory with default path", () =>
+    it("throws on empty root directory with default path", () =>
       expect(findProdInstalls()).to.be.rejectedWith("Unable to find root package.json")
     );
+
+    it("throws on bad package.json", async () => {
+      mock({
+        "package.json": "BAD_JSON"
+      });
+
+      await expect(findProdInstalls()).to.be.rejectedWith("Unexpected token");
+    });
 
     it("handles no dependencies", async () => {
       mock({
