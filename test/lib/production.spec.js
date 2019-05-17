@@ -1,5 +1,7 @@
 "use strict";
 
+/* eslint camelcase: ["error", {allow: ["node_modules"]}]*/
+
 const mock = require("mock-fs");
 
 const { findProdInstalls } = require("../../lib/production");
@@ -50,6 +52,75 @@ describe("lib/production", () => {
       expect(await findProdInstalls()).to.eql([]);
     });
 
-    it("TODO MORE TESTS");
+    it("handles nested dependencies and optionalDependencies", async () => {
+      mock({
+        "package.json": JSON.stringify({
+          dependencies: {
+            bar: "^1.2.3"
+          },
+          optionalDependencies: {
+            foo: "^1.2.3"
+          }
+        }),
+        node_modules: {
+          bar: {
+            "package.json": JSON.stringify({
+              dependencies: {
+                baz: "^1.2.3"
+              }
+            }),
+            node_modules: {
+              baz: {
+                "package.json": JSON.stringify({})
+              }
+            }
+          },
+          foo: {
+            "package.json": JSON.stringify({})
+          }
+        }
+      });
+
+      expect(await findProdInstalls()).to.eql([
+        "node_modules/bar",
+        "node_modules/bar/node_modules/baz",
+        "node_modules/foo"
+      ]);
+    });
+
+
+    it("handles flattened dependencies and optionalDependencies", async () => {
+      mock({
+        "package.json": JSON.stringify({
+          dependencies: {
+            bar: "^1.2.3"
+          },
+          optionalDependencies: {
+            foo: "^1.2.3"
+          }
+        }),
+        node_modules: {
+          bar: {
+            "package.json": JSON.stringify({
+              dependencies: {
+                baz: "^1.2.3"
+              }
+            })
+          },
+          baz: {
+            "package.json": JSON.stringify({})
+          },
+          foo: {
+            "package.json": JSON.stringify({})
+          }
+        }
+      });
+
+      expect(await findProdInstalls()).to.eql([
+        "node_modules/bar",
+        "node_modules/baz",
+        "node_modules/foo"
+      ]);
+    });
   });
 });
