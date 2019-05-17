@@ -8,6 +8,26 @@ inspectdep 🔎
 
 An inspection tool for dependencies in `node_modules`.
 
+## API
+
+### `findProdInstalls({ rootPath })`
+
+Find on-disk locations of all production dependencies in `node_modules`.
+
+_Notes_:
+
+* This includes all `dependencies` and `optionalDependencies`, simulating what would happen during a `yarn|npm install --production`.
+* Paths are relative to `rootPath` and separated with `path.sep` native OS separators
+* If dependencies are not found installed on-disk they are simply ignored
+
+_Parameters_:
+
+* `rootPath` (`string`): `node_modules` root location (default: `process.cwd()`)
+
+_Returns_:
+
+* (`Promise<Array<String>>`): list of relative paths to on-disk dependencies
+
 [npm_img]: https://badge.fury.io/js/inspectdep.svg
 [npm_site]: http://badge.fury.io/js/inspectdep
 [trav_img]: https://api.travis-ci.com/FormidableLabs/inspectdep.svg
