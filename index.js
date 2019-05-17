@@ -48,6 +48,7 @@ const resolveLocations = async ({ rootPath, curPath, pkg }) => {
     const found = await findPkg({ rootPath, curPath, name });
     if (!found) {
       // TODO: Handle not found and/or filter nulls.
+      // eslint-disable-next-line no-console
       console.log("TODO HANDLE NOT FOUND", { rootPath, curPath, name, isOptional });
       return null;
     }
@@ -87,14 +88,3 @@ const production = async ({ rootPath }) => {
 module.exports = {
   production
 };
-
-if (require.main === module) {
-  production({ rootPath: "../serverless-jetpack/test/packages/huge/yarn" })
-    .then((data) => {
-      console.log(data);
-    })
-    .catch((err) => {
-      console.error(err);
-      process.exit(1);
-    });
-}
