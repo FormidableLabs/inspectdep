@@ -20,31 +20,41 @@ const findPkg = async ({ rootPath, curPath, name }) => {
       pkg = await readJson(path.join(loc, "package.json"));
       return { pkg, loc };
     } catch (err) {
-      console.log("TODO HANDLE ERROR", err); // TODO HANDLE NOTFOUND VS OTHER
-    }
+      // Decrement path and try again if not found.
+      if (err.code === "ENOENT") {
+        curPath = path.basename(curPath);
+        continue;
+      }
 
-    // Decrement path and try again.
-    curPath = path.basename(curPath);
+      // Otherwise, we have a real error.
+      throw err;
+    }
   }
 
-  return { pkg: null, loc: null };
+  return null;
 };
 
 // Recursively traverse package.json + path to resolve all on-disk locations
 const resolveLocations = async ({ rootPath, curPath, pkg }) => {
   const locs = await Promise.all(Object.keys(pkg.dependencies || {}).map(async (name) => {
     // Find current package.
-    const { pkg, loc } = await findPkg({
-      rootPath,
-      curPath,
-      name
-    });
+    const found = await findPkg({ rootPath, curPath, name });
+    if (!found) {
+      console.log("TODO HANDLE NOT FOUND", { rootPath, curPath, name });
+      return null;
+    }
+
+    // Recurse into dependencies.
+    const deps = await resolveLocations({ rootPath, curPath: found.loc, pkg: found.pkg });
 
     // TODO: RECURSE INTO EACH DEPENDENCY.
-    console.log("TODO HERE", { loc });
+    console.log("TODO HERE", { loc: found.loc, deps });
 
-    return path.relative(rootPath, loc);
+    return path.relative(rootPath, found.loc);
   }));
+
+  // TODO FILTER NULLS
+  // TODO FLATTEN ARRAYS (AND SORT?)
 
   return locs;
 };
