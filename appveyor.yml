@@ -17,7 +17,7 @@ install:
 test_script:
   - node --version
   - yarn --version
-  - yarn run check
+  - yarn check-ci
 
 # Don't actually build.
 build: off

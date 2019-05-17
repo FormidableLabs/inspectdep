@@ -16,4 +16,5 @@ install:
 
 script:
   - yarn --version
-  - yarn run check
+  - yarn check-ci
+  - codecov
