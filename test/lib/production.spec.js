@@ -2,9 +2,13 @@
 
 /* eslint camelcase: ["error", {allow: ["node_modules"]}]*/
 
+const path = require("path");
 const mock = require("mock-fs");
 
 const { findProdInstalls } = require("../../lib/production");
+
+// Normalize paths for windows.
+const normalize = (arr) => arr.map((item) => path.normalize(item));
 
 describe("lib/production", () => {
   beforeEach(() => {
@@ -89,11 +93,11 @@ describe("lib/production", () => {
         }
       });
 
-      expect(await findProdInstalls()).to.eql([
+      expect(await findProdInstalls()).to.eql(normalize([
         "node_modules/bar",
         "node_modules/bar/node_modules/baz",
         "node_modules/foo"
-      ]);
+      ]));
     });
 
 
@@ -124,11 +128,11 @@ describe("lib/production", () => {
         }
       });
 
-      expect(await findProdInstalls()).to.eql([
+      expect(await findProdInstalls()).to.eql(normalize([
         "node_modules/bar",
         "node_modules/baz",
         "node_modules/foo"
-      ]);
+      ]));
     });
   });
 });
