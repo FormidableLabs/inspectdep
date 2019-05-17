@@ -54,6 +54,8 @@ const resolveLocations = async ({ rootPath, curPath, pkg }) => {
   return locs
     // Flatten sub-arrays.
     .reduce((m, a) => m.concat(a), [])
+    // Remove dependencies we didn't find (`null`)
+    .filter((item) => !!item)
     // By sorting, we can filter duplicates just looking one behind.
     .sort()
     .filter((item, i, items) => item !== items[i - 1]);
