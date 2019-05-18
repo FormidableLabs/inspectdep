@@ -70,6 +70,9 @@ describe("lib/production", () => {
           },
           optionalDependencies: {
             foo: "^1.2.3"
+          },
+          devDependencies: {
+            baz: "^1.2.3"
           }
         }),
         node_modules: {
@@ -82,10 +85,20 @@ describe("lib/production", () => {
             node_modules: {
               baz: {
                 "package.json": JSON.stringify({})
+              },
+              "should-also-not-be-included": {
+                "package.json": JSON.stringify({})
               }
             }
           },
+          // This one should not be included. It's already nested.
+          baz: {
+            "package.json": JSON.stringify({})
+          },
           foo: {
+            "package.json": JSON.stringify({})
+          },
+          "should-not-be-included": {
             "package.json": JSON.stringify({})
           }
         }
@@ -121,6 +134,9 @@ describe("lib/production", () => {
           },
           foo: {
             "package.json": JSON.stringify({})
+          },
+          "should-not-be-included": {
+            "package.json": JSON.stringify({})
           }
         }
       });
@@ -150,6 +166,9 @@ describe("lib/production", () => {
                   baz: "^1.2.3"
                 }
               })
+            },
+            "scoped-should-not-be-included": {
+              "package.json": JSON.stringify({})
             }
           },
           baz: {
@@ -159,6 +178,9 @@ describe("lib/production", () => {
             foo: {
               "package.json": JSON.stringify({})
             }
+          },
+          "should-not-be-included": {
+            "package.json": JSON.stringify({})
           }
         }
       });
