@@ -1,7 +1,5 @@
 "use strict";
 
-/* eslint camelcase: ["error", {allow: ["node_modules"]}]*/
-
 const path = require("path");
 const mock = require("mock-fs");
 
@@ -100,7 +98,6 @@ describe("lib/production", () => {
       ]));
     });
 
-
     it("handles flattened dependencies and optionalDependencies", async () => {
       mock({
         "package.json": JSON.stringify({
@@ -132,6 +129,44 @@ describe("lib/production", () => {
         "node_modules/bar",
         "node_modules/baz",
         "node_modules/foo"
+      ]));
+    });
+
+    it("handles scoped packages", async () => {
+      mock({
+        "package.json": JSON.stringify({
+          dependencies: {
+            "@scope/bar": "^1.2.3"
+          },
+          optionalDependencies: {
+            "@bunny/foo": "^1.2.3"
+          }
+        }),
+        node_modules: {
+          "@scope": {
+            bar: {
+              "package.json": JSON.stringify({
+                dependencies: {
+                  baz: "^1.2.3"
+                }
+              })
+            }
+          },
+          baz: {
+            "package.json": JSON.stringify({})
+          },
+          "@bunny": {
+            foo: {
+              "package.json": JSON.stringify({})
+            }
+          }
+        }
+      });
+
+      expect(await findProdInstalls()).to.eql(normalize([
+        "node_modules/@bunny/foo",
+        "node_modules/@scope/bar",
+        "node_modules/baz"
       ]));
     });
   });

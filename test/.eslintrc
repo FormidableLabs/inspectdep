@@ -4,3 +4,4 @@ extends:
 
 rules:
   object-property-newline: ["error", { allowAllPropertiesOnSameLine: true }]
+  camelcase: ["error", {allow: ["node_modules"]}]
