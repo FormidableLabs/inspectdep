@@ -75,11 +75,11 @@ describe("lib/production", () => {
             baz: "^1.2.3"
           }
         }),
-        ".bin": {
-          "baz": "a symlink to cli/baz.js",
-          "should-not-be-included": "shouldn't have this"
-        },
         node_modules: {
+          ".bin": {
+            baz: "a symlink to cli/baz.js",
+            "should-not-be-included": "shouldn't have this"
+          },
           bar: {
             "package.json": JSON.stringify({
               dependencies: {
@@ -90,7 +90,7 @@ describe("lib/production", () => {
               baz: {
                 "package.json": JSON.stringify({
                   bin: {
-                    "baz": "cli/baz.js"
+                    baz: "cli/baz.js"
                   }
                 })
               },
@@ -130,11 +130,11 @@ describe("lib/production", () => {
             foo: "^1.2.3"
           }
         }),
-        ".bin": {
-          "baz": "a symlink to cli/baz.js",
-          "should-not-be-included": "shouldn't have this"
-        },
         node_modules: {
+          ".bin": {
+            baz: "a symlink to cli/baz.js",
+            "should-not-be-included": "shouldn't have this"
+          },
           bar: {
             "package.json": JSON.stringify({
               dependencies: {
@@ -145,7 +145,7 @@ describe("lib/production", () => {
           baz: {
             "package.json": JSON.stringify({
               bin: {
-                "baz": "cli/baz.js"
+                baz: "cli/baz.js"
               }
             })
           },
