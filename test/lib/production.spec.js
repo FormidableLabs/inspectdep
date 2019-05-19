@@ -76,6 +76,10 @@ describe("lib/production", () => {
           }
         }),
         node_modules: {
+          ".bin": {
+            baz: "a symlink to cli/baz.js",
+            "should-not-be-included": "shouldn't have this"
+          },
           bar: {
             "package.json": JSON.stringify({
               dependencies: {
@@ -84,7 +88,11 @@ describe("lib/production", () => {
             }),
             node_modules: {
               baz: {
-                "package.json": JSON.stringify({})
+                "package.json": JSON.stringify({
+                  bin: {
+                    baz: "cli/baz.js"
+                  }
+                })
               },
               "should-also-not-be-included": {
                 "package.json": JSON.stringify({})
@@ -105,6 +113,7 @@ describe("lib/production", () => {
       });
 
       expect(await findProdInstalls()).to.eql(normalize([
+        "node_modules/.bin/baz",
         "node_modules/bar",
         "node_modules/bar/node_modules/baz",
         "node_modules/foo"
@@ -122,6 +131,10 @@ describe("lib/production", () => {
           }
         }),
         node_modules: {
+          ".bin": {
+            baz: "a symlink to cli/baz.js",
+            "should-not-be-included": "shouldn't have this"
+          },
           bar: {
             "package.json": JSON.stringify({
               dependencies: {
@@ -130,7 +143,11 @@ describe("lib/production", () => {
             })
           },
           baz: {
-            "package.json": JSON.stringify({})
+            "package.json": JSON.stringify({
+              bin: {
+                baz: "cli/baz.js"
+              }
+            })
           },
           foo: {
             "package.json": JSON.stringify({})
@@ -142,6 +159,7 @@ describe("lib/production", () => {
       });
 
       expect(await findProdInstalls()).to.eql(normalize([
+        "node_modules/.bin/baz",
         "node_modules/bar",
         "node_modules/baz",
         "node_modules/foo"
