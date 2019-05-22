@@ -1,7 +1,7 @@
 Changes
 =======
 
-## UNRELEASED
+## 0.1.2
 
 * Handle `package.json:bin = <string>` inference.
   [#8](https://github.com/FormidableLabs/inspectdep/issues/8)
