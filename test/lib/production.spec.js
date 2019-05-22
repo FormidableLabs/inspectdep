@@ -78,6 +78,7 @@ describe("lib/production", () => {
         node_modules: {
           ".bin": {
             baz: "a symlink to cli/baz.js",
+            foo: "a symlink to cli/foo.js",
             "should-not-be-included": "shouldn't have this"
           },
           bar: {
@@ -104,7 +105,10 @@ describe("lib/production", () => {
             "package.json": JSON.stringify({})
           },
           foo: {
-            "package.json": JSON.stringify({})
+            "package.json": JSON.stringify({
+              name: "foo",
+              bin: "./cli/foo.js"
+            })
           },
           "should-not-be-included": {
             "package.json": JSON.stringify({})
@@ -114,6 +118,7 @@ describe("lib/production", () => {
 
       expect(await findProdInstalls()).to.eql(normalize([
         "node_modules/.bin/baz",
+        "node_modules/.bin/foo",
         "node_modules/bar",
         "node_modules/bar/node_modules/baz",
         "node_modules/foo"
