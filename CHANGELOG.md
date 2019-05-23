@@ -1,6 +1,10 @@
 Changes
 =======
 
+## UNRELEASED
+
+* Change signature of `findProdInstalls` to take `curPath`.
+
 ## 0.1.2
 
 * Handle `package.json:bin = <string>` inference.
