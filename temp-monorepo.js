@@ -1,5 +1,6 @@
 "use strict";
 
+const path = require("path");
 const { findProdInstalls } = require(".");
 
 const { REPO } = process.env;
@@ -8,8 +9,14 @@ if (!REPO) {
 }
 
 const main = async () => {
-  const files = await findProdInstalls({ rootPath: REPO });
-  console.log("TODO HERE", { files }); // eslint-disable-line no-console
+  const rootFiles = await findProdInstalls({ rootPath: REPO });
+  const fnFiles = await findProdInstalls({
+    rootPath: REPO,
+    curPath: path.resolve(REPO, "backend/functions/ncr-menus")
+  });
+
+  // eslint-disable-next-line no-console,no-magic-numbers
+  console.log("TODO HERE", JSON.stringify({ rootFiles, fnFiles }, null, 2));
 };
 
 /**
@@ -18,8 +25,14 @@ const main = async () => {
  * Testing ground for monorepo support...
  */
 if (require.main === module) {
-  main().catch((err) => {
-    console.error(err); // eslint-disable-line no-console
-    process.exit(1); // eslint-disable-line no-process-exit
-  });
+  const start = new Date();
+  main()
+    .then(() => {
+      // eslint-disable-next-line no-console
+      console.log(`Elapsed ms: ${(new Date() - start)}`)
+    })
+    .catch((err) => {
+      console.error(err); // eslint-disable-line no-console
+      process.exit(1); // eslint-disable-line no-process-exit
+    });
 }
