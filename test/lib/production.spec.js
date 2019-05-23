@@ -214,5 +214,46 @@ describe("lib/production", () => {
         "node_modules/baz"
       ]));
     });
+
+    it("handles symlinks", async () => {
+      mock({
+        "package.json": JSON.stringify({
+          dependencies: {
+            "@scope/bar": "^1.2.3",
+            foo: "^2.3.4"
+          }
+        }),
+        node_modules: {
+          "@scope": {
+            bar: mock.symlink({
+              path: "../../lib/bar"
+            })
+          },
+          foo: {
+            "package.json": JSON.stringify({})
+          }
+        },
+        lib: {
+          bar: {
+            "package.json": JSON.stringify({
+              dependencies: {
+                baz: "^1.2.3"
+              }
+            }),
+            node_modules: {
+              baz: {
+                "package.json": JSON.stringify({})
+              }
+            }
+          }
+        }
+      });
+
+      expect(await findProdInstalls()).to.eql(normalize([
+        "node_modules/@scope/bar",
+        "node_modules/@scope/bar/node_modules/baz",
+        "node_modules/foo"
+      ]));
+    });
   });
 });
