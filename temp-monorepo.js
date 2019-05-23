@@ -1,5 +1,10 @@
 "use strict";
 
+/**
+ * TODO: REMOVE THIS FILE!!!!
+ *
+ * Testing ground for monorepo support...
+ */
 const path = require("path");
 const { findProdInstalls } = require(".");
 
@@ -19,17 +24,12 @@ const main = async () => {
   console.log("TODO HERE", JSON.stringify({ rootFiles, fnFiles }, null, 2));
 };
 
-/**
- * TODO: REMOVE THIS FILE!!!!
- *
- * Testing ground for monorepo support...
- */
 if (require.main === module) {
   const start = new Date();
   main()
-    .then(() => {
+    .then(() => { // eslint-disable-line promise/always-return
       // eslint-disable-next-line no-console
-      console.log(`Elapsed ms: ${(new Date() - start)}`)
+      console.log(`Elapsed ms: ${(new Date() - start)}`);
     })
     .catch((err) => {
       console.error(err); // eslint-disable-line no-console

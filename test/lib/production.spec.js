@@ -19,7 +19,7 @@ describe("lib/production", () => {
 
   describe("findProdInstalls", () => {
     it("throws on empty root directory with default path", () =>
-      expect(findProdInstalls()).to.be.rejectedWith("Unable to find root package.json")
+      expect(findProdInstalls()).to.be.rejectedWith("Unable to find package.json")
     );
 
     it("throws on bad package.json", async () => {
