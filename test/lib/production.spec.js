@@ -255,5 +255,52 @@ describe("lib/production", () => {
         "node_modules/foo"
       ]));
     });
+
+    it("handles symlinks and monorepos", async () => {
+      mock({
+        "package.json": JSON.stringify({}),
+        packages: {
+          "my-pkg": {
+            "package.json": JSON.stringify({
+              dependencies: {
+                "@scope/bar": "^1.2.3",
+                foo: "^2.3.4"
+              }
+            })
+          }
+        },
+        node_modules: {
+          "@scope": {
+            bar: mock.symlink({
+              path: "../../lib/bar"
+            })
+          },
+          foo: {
+            "package.json": JSON.stringify({})
+          }
+        },
+        lib: {
+          bar: {
+            "package.json": JSON.stringify({
+              dependencies: {
+                baz: "^1.2.3"
+              }
+            }),
+            node_modules: {
+              baz: {
+                "package.json": JSON.stringify({})
+              }
+            }
+          }
+        }
+      });
+
+      expect(await findProdInstalls({ curPath: path.resolve("packages/my-pkg") }))
+        .to.eql(normalize([
+          "node_modules/@scope/bar",
+          "node_modules/@scope/bar/node_modules/baz",
+          "node_modules/foo"
+        ]));
+    });
   });
 });
