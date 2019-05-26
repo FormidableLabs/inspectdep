@@ -367,5 +367,43 @@ describe("lib/production", () => {
       // eslint-disable-next-line no-magic-numbers
       expect(Object.keys(pkgCache).filter((k) => pkgCache[k] === null)).to.have.lengthOf(2);
     });
+
+    // TODO: Might have to do mandatory cache for circular deps in
+    // findProdInstalls `pkgCache = pkgCache || {}`.
+    it.only("uses the package cache and detects circular dependencies", async () => {
+      mock({
+        "package.json": JSON.stringify({
+          dependencies: {
+            bar: "^1.2.3",
+            foo: "^1.2.3"
+          }
+        }),
+        node_modules: {
+          bar: {
+            "package.json": JSON.stringify({
+              dependencies: {
+                foo: "^1.2.3"
+              }
+            })
+          },
+          foo: {
+            "package.json": JSON.stringify({
+              dependencies: {
+                bar: "^1.2.3"
+              }
+            })
+          },
+          "should-not-be-included": {
+            "package.json": JSON.stringify({})
+          }
+        }
+      });
+
+      const pkgCache = {};
+      expect(await findProdInstalls({ pkgCache })).to.eql(normalize([
+        "node_modules/bar",
+        "node_modules/foo"
+      ]));
+    });
   });
 });
