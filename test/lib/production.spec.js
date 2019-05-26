@@ -302,5 +302,66 @@ describe("lib/production", () => {
           "node_modules/foo"
         ]));
     });
+
+    it("uses the package cache", async () => {
+      mock({
+        "package.json": JSON.stringify({
+          dependencies: {
+            bar: "^1.2.3"
+          },
+          optionalDependencies: {
+            foo: "^1.2.3"
+          }
+        }),
+        node_modules: {
+          ".bin": {
+            baz: "a symlink to cli/baz.js",
+            "should-not-be-included": "shouldn't have this"
+          },
+          bar: {
+            "package.json": JSON.stringify({
+              dependencies: {
+                baz: "^1.2.3"
+              }
+            })
+          },
+          baz: {
+            "package.json": JSON.stringify({
+              bin: {
+                baz: "cli/baz.js"
+              }
+            })
+          },
+          foo: {
+            "package.json": JSON.stringify({})
+          },
+          "should-not-be-included": {
+            "package.json": JSON.stringify({})
+          }
+        }
+      });
+
+      const pkgCache = {};
+      expect(await findProdInstalls({ pkgCache })).to.eql(normalize([
+        "node_modules/.bin/baz",
+        "node_modules/bar",
+        "node_modules/baz",
+        "node_modules/foo"
+      ]));
+
+      // eslint-disable-next-line no-magic-numbers
+      expect(Object.keys(pkgCache)).to.have.lengthOf(3);
+
+      // Run again and should just re-use cache.
+      expect(await findProdInstalls({ pkgCache })).to.eql(normalize([
+        "node_modules/.bin/baz",
+        "node_modules/bar",
+        "node_modules/baz",
+        "node_modules/foo"
+      ]));
+
+      // eslint-disable-next-line no-magic-numbers
+      expect(Object.keys(pkgCache)).to.have.lengthOf(3);
+    });
   });
 });

@@ -4,6 +4,8 @@ Changes
 ## UNRELEASED
 
 * Change signature of `findProdInstalls` to take `curPath`.
+* Add `pkgCache` caching support.
+  [#7](https://github.com/FormidableLabs/inspectdep/issues/7)
 
 ## 0.1.2
 
