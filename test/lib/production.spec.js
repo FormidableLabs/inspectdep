@@ -350,7 +350,9 @@ describe("lib/production", () => {
       ]));
 
       // eslint-disable-next-line no-magic-numbers
-      expect(Object.keys(pkgCache)).to.have.lengthOf(3);
+      expect(Object.keys(pkgCache).filter((k) => pkgCache[k])).to.have.lengthOf(3);
+      // eslint-disable-next-line no-magic-numbers
+      expect(Object.keys(pkgCache).filter((k) => pkgCache[k] === null)).to.have.lengthOf(2);
 
       // Run again and should just re-use cache.
       expect(await findProdInstalls({ pkgCache })).to.eql(normalize([
@@ -361,7 +363,9 @@ describe("lib/production", () => {
       ]));
 
       // eslint-disable-next-line no-magic-numbers
-      expect(Object.keys(pkgCache)).to.have.lengthOf(3);
+      expect(Object.keys(pkgCache).filter((k) => pkgCache[k])).to.have.lengthOf(3);
+      // eslint-disable-next-line no-magic-numbers
+      expect(Object.keys(pkgCache).filter((k) => pkgCache[k] === null)).to.have.lengthOf(2);
     });
   });
 });
