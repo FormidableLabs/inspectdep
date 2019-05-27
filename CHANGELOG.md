@@ -1,7 +1,7 @@
 Changes
 =======
 
-## UNRELEASED
+## 0.1.3
 
 * Detect and resolve circular dependencies.
   [#11](https://github.com/FormidableLabs/inspectdep/issues/11)
