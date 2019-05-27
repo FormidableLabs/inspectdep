@@ -1,6 +1,11 @@
 Changes
 =======
 
+## UNRELEASED
+
+* Detect and resolve circular dependencies.
+  [#11](https://github.com/FormidableLabs/inspectdep/issues/11)
+
 ## 0.1.2
 
 * Handle `package.json:bin = <string>` inference.
