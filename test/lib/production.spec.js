@@ -215,6 +215,84 @@ describe("lib/production", () => {
       ]));
     });
 
+    it("detects simple circular dependencies", async () => {
+      mock({
+        "package.json": JSON.stringify({
+          dependencies: {
+            bar: "^1.2.3",
+            foo: "^1.2.3"
+          }
+        }),
+        node_modules: {
+          bar: {
+            "package.json": JSON.stringify({
+              dependencies: {
+                foo: "^1.2.3"
+              }
+            })
+          },
+          foo: {
+            "package.json": JSON.stringify({
+              dependencies: {
+                bar: "^1.2.3"
+              }
+            })
+          },
+          "should-not-be-included": {
+            "package.json": JSON.stringify({})
+          }
+        }
+      });
+
+      expect(await findProdInstalls()).to.eql(normalize([
+        "node_modules/bar",
+        "node_modules/foo"
+      ]));
+    });
+
+    it("detects multi-level circular dependencies", async () => {
+      mock({
+        "package.json": JSON.stringify({
+          dependencies: {
+            bar: "^1.2.3",
+            "nested-foo": "^1.2.3"
+          }
+        }),
+        node_modules: {
+          bar: {
+            "package.json": JSON.stringify({
+              dependencies: {
+                "nested-foo": "^1.2.3"
+              }
+            })
+          },
+          foo: {
+            "package.json": JSON.stringify({
+              dependencies: {
+                bar: "^1.2.3"
+              }
+            })
+          },
+          "nested-foo": {
+            "package.json": JSON.stringify({
+              dependencies: {
+                foo: "^1.2.3"
+              }
+            })
+          },
+          "should-not-be-included": {
+            "package.json": JSON.stringify({})
+          }
+        }
+      });
+
+      expect(await findProdInstalls()).to.eql(normalize([
+        "node_modules/bar",
+        "node_modules/foo",
+        "node_modules/nested-foo"
+      ]));
+    });
+
     it("handles symlinks", async () => {
       mock({
         "package.json": JSON.stringify({
