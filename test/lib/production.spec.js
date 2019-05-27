@@ -215,8 +215,7 @@ describe("lib/production", () => {
       ]));
     });
 
-    // TODO: Regression
-    it.skip("detects simple circular dependencies", async () => {
+    it("detects simple circular dependencies", async () => {
       mock({
         "package.json": JSON.stringify({
           dependencies: {
@@ -251,7 +250,7 @@ describe("lib/production", () => {
       ]));
     });
 
-    it.only("detects multi-level circular dependencies", async () => {
+    it("detects multi-level circular dependencies", async () => {
       mock({
         "package.json": JSON.stringify({
           dependencies: {
@@ -289,8 +288,8 @@ describe("lib/production", () => {
 
       expect(await findProdInstalls()).to.eql(normalize([
         "node_modules/bar",
-        "node_modules/nested-foo",
-        "node_modules/foo"
+        "node_modules/foo",
+        "node_modules/nested-foo"
       ]));
     });
   });
