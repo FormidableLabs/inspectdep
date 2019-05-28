@@ -24,6 +24,7 @@ _Notes_:
 _Parameters_:
 
 * `rootPath` (`string`): `node_modules` root location (default: `process.cwd()`)
+* `curPath` (`string`): location to start inferring dependencies from (default: `rootPath`)
 
 _Returns_:
 

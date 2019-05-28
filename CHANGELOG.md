@@ -1,6 +1,10 @@
 Changes
 =======
 
+## UNRELEASED
+
+* Change signature of `findProdInstalls` to include param `curPath`.
+
 ## 0.1.3
 
 * Detect and resolve circular dependencies.
