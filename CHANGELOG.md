@@ -1,7 +1,7 @@
 Changes
 =======
 
-## UNRELEASED
+## 0.2.0
 
 * Change signature of `findProdInstalls` to include param `curPath`.
 
