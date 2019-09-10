@@ -18,10 +18,6 @@ describe("lib/production", () => {
   });
 
   describe("findProdInstalls", () => {
-    it("TODO REMOVE FAIL", () => {
-      expect(0).to.equal(1);
-    });
-
     it("throws on empty root directory with default path", () =>
       expect(findProdInstalls()).to.be.rejectedWith("Unable to find package.json")
     );
