@@ -27,5 +27,6 @@ jobs:
       env:
         CI: true
     - run: yarn check-ci
-    # TODO: We may need a custom token not needed for Travis.
     - run: yarn codecov
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
