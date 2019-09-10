@@ -22,11 +22,9 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: yarn install + checks
-      run: |
-        yarn --version
-        yarn install --frozen-lockfile
-        yarn check-ci
-        yarn codecov
+    - run: yarn --version
+    - run: yarn install --frozen-lockfile
       env:
         CI: true
+    - run: yarn check-ci
+    - run: yarn codecov
