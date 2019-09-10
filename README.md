@@ -31,7 +31,7 @@ _Returns_:
 
 [npm_img]: https://badge.fury.io/js/inspectdep.svg
 [npm_site]: http://badge.fury.io/js/inspectdep
-[actions_img]: https://github.com/FormidableLabs/workflows/CI/badge.svg
-[actions_site]: https://github.com/FormidableLabs/workflows/CI
+[actions_img]: https://github.com/FormidableLabs/inspectdep/workflows/CI/badge.svg
+[actions_site]: https://github.com/FormidableLabs/inspectdep/actions
 [cov_img]: https://codecov.io/gh/FormidableLabs/inspectdep/branch/master/graph/badge.svg
 [cov_site]: https://codecov.io/gh/FormidableLabs/inspectdep
