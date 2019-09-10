@@ -5,7 +5,7 @@ on: [push]
 # TODO: How do we just build on PRs against master or open PRs?
 # push:
 #   branches:
-      - master
+#      - master
 
 jobs:
   build:
