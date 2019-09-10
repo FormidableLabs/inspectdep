@@ -26,6 +26,6 @@ jobs:
         yarn --version
         yarn install --frozen-lockfile
         yarn check-ci
-        codecov
+        node_modules/.bin/codecov
       env:
         CI: true
