@@ -19,7 +19,8 @@
     "test": "mocha",
     "test-cov": "nyc mocha",
     "check": "yarn lint && yarn test",
-    "check-ci": "yarn lint && yarn test-cov"
+    "check-ci": "yarn lint && yarn test-cov",
+    "codecov": "codecov"
   },
   "engines": {
     "node": ">=8.0.0"
