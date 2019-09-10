@@ -1,4 +1,4 @@
-name: GitHub Actions CI
+name: CI
 
 on: [push]
 
@@ -27,4 +27,5 @@ jobs:
       env:
         CI: true
     - run: yarn check-ci
+    # TODO: We may need a custom token not needed for Travis.
     - run: yarn codecov
