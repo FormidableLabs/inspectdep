@@ -16,7 +16,9 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        node-version: [12.x, 14.x, 16.x]
+        # BUG: 16.3+ fails for mock-fs
+        # https://github.com/FormidableLabs/inspectdep/issues/29
+        node-version: [12.x, 14.x, 16.2.0]
 
     steps:
       - uses: actions/checkout@v2
