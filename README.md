@@ -35,3 +35,8 @@ _Returns_:
 [actions_site]: https://github.com/FormidableLabs/inspectdep/actions
 [cov_img]: https://codecov.io/gh/FormidableLabs/inspectdep/branch/master/graph/badge.svg
 [cov_site]: https://codecov.io/gh/FormidableLabs/inspectdep
+
+
+## Maintenance Status
+
+**Active:** Formidable is actively working on this project, and we expect to continue for work for the foreseeable future. Bug reports, feature requests and pull requests are welcome.
