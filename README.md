@@ -4,6 +4,7 @@ inspectdep 🔎
 [![npm version][npm_img]][npm_site]
 [![Actions Status][actions_img]][actions_site]
 [![Coverage Status][cov_img]][cov_site]
+[![Maintenance Status][maintenance-image]](#maintenance-status)
 
 An inspection tool for dependencies in `node_modules`.
 
@@ -35,6 +36,7 @@ _Returns_:
 [actions_site]: https://github.com/FormidableLabs/inspectdep/actions
 [cov_img]: https://codecov.io/gh/FormidableLabs/inspectdep/branch/master/graph/badge.svg
 [cov_site]: https://codecov.io/gh/FormidableLabs/inspectdep
+[maintenance-image]: https://img.shields.io/badge/maintenance-active-green.svg?color=brightgreen&style=flat
 
 
 ## Maintenance Status
