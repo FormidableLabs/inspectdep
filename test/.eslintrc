@@ -1,7 +1,0 @@
----
-extends:
-  - formidable/configurations/es6-node-test
-
-rules:
-  object-property-newline: ["error", { allowAllPropertiesOnSameLine: true }]
-  camelcase: ["error", {allow: ["node_modules"]}]
